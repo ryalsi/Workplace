@@ -21,48 +21,53 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Add a light to the scene
-    const light = new THREE.AmbientLight(0x404040); // Ambient light
-    scene.add(light);
+    // Add lights
+    const ambientLight = new THREE.AmbientLight(0x404040); // Ambient light
+    scene.add(ambientLight);
 
-    // Load the .gltf model
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Directional light
+    directionalLight.position.set(5, 5, 5); // Position the light
+    scene.add(directionalLight);
+
+    // Load the GLTF model
     const loader = new THREE.GLTFLoader();
     loader.load('ryalsi/Workplace/scene.gltf', (gltf) => {
-      // Add the loaded model to the scene
-      scene.add(gltf.scene);
+      const model = gltf.scene;
+      console.log('Model loaded successfully');
       
-      // Optionally, adjust camera position based on model size
-      const bbox = new THREE.Box3().setFromObject(gltf.scene);
+      // Optionally, scale the model if necessary
+      model.scale.set(0.1, 0.1, 0.1); // Adjust as needed
+      scene.add(model);
+
+      // Adjust camera position based on model size
+      const bbox = new THREE.Box3().setFromObject(model);
       const center = bbox.getCenter(new THREE.Vector3());
       const size = bbox.getSize(new THREE.Vector3());
-      camera.position.set(center.x, center.y, size.length());
+      camera.position.set(center.x, center.y, size.length() * 2); // Position the camera farther from the model
       camera.lookAt(center);
-      
-      // Animate the model (Optional)
+
+      // Start animation
       animate();
     }, undefined, (error) => {
       console.error('Error loading GLTF model:', error);
     });
 
-    // Set up animation loop
+    // Animation loop
     function animate() {
       requestAnimationFrame(animate);
 
-      // Rotate the model (Optional)
-      if (scene.children.length > 0) {
-        scene.children[0].rotation.y += 0.01;
-      }
+      // Optional: rotate the model
+      scene.children[0]?.rotation.y += 0.01;
 
       renderer.render(scene, camera);
     }
 
-    // Handle window resizing
+    // Resize handler
     window.addEventListener('resize', () => {
       renderer.setSize(window.innerWidth, window.innerHeight);
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
     });
-
   </script>
 </body>
 </html>
