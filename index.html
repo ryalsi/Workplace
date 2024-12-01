@@ -1,59 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Model of Girl with Three.js</title>
-    <style>
-        body { margin: 0; }
-        canvas { display: block; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Model Viewer</title>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; }
+  </style>
 </head>
 <body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/loaders/GLTFLoader.js"></script>
 
-    <!-- Include the Three.js library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // Set up scene, camera, and renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-    <script>
-        // Set up the scene
-        var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    // Add a light to the scene
+    const light = new THREE.AmbientLight(0x404040); // Ambient light
+    scene.add(light);
 
-        // Create a WebGL renderer and append to the DOM
-        var renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+    // Load the .gltf model
+    const loader = new THREE.GLTFLoader();
+    loader.load('ryalsi/Workplace/scene.gltf', (gltf) => {
+      // Add the loaded model to the scene
+      scene.add(gltf.scene);
+      
+      // Optionally, adjust camera position based on model size
+      const bbox = new THREE.Box3().setFromObject(gltf.scene);
+      const center = bbox.getCenter(new THREE.Vector3());
+      const size = bbox.getSize(new THREE.Vector3());
+      camera.position.set(center.x, center.y, size.length());
+      camera.lookAt(center);
+      
+      // Animate the model (Optional)
+      animate();
+    }, undefined, (error) => {
+      console.error('Error loading GLTF model:', error);
+    });
 
-        // Create a basic geometry (a cube as a placeholder for the girl model)
-        var geometry = new THREE.BoxGeometry(1, 2, 1); // A simple box as a placeholder
-        var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        var cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
+    // Set up animation loop
+    function animate() {
+      requestAnimationFrame(animate);
 
-        // Set the camera position
-        camera.position.z = 5;
+      // Rotate the model (Optional)
+      if (scene.children.length > 0) {
+        scene.children[0].rotation.y += 0.01;
+      }
 
-        // Animation loop to render the scene
-        var animate = function () {
-            requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
 
-            // Rotate the cube for demonstration
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
+    // Handle window resizing
+    window.addEventListener('resize', () => {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    });
 
-            // Render the scene from the camera's point of view
-            renderer.render(scene, camera);
-        };
-
-        animate();
-
-        // Resize the canvas if the window is resized
-        window.addEventListener('resize', function () {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-        });
-    </script>
-
+  </script>
 </body>
 </html>
