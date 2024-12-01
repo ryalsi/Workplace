@@ -1,41 +1,59 @@
-import bpy
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model of Girl with Three.js</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
 
-# Clear existing objects
-bpy.ops.object.select_all(action='SELECT')
-bpy.ops.object.delete(use_global=False)
+    <!-- Include the Three.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-# Create a human-like base (a simple humanoid body shape using spheres and cylinders)
-# Head (Sphere)
-bpy.ops.mesh.primitive_uv_sphere_add(radius=0.5, location=(0, 0, 1.5))
-head = bpy.context.active_object
-head.name = "Head"
+    <script>
+        // Set up the scene
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-# Body (Cylinder)
-bpy.ops.mesh.primitive_cylinder_add(radius=0.4, depth=1.5, location=(0, 0, 0.5))
-body = bpy.context.active_object
-body.name = "Body"
+        // Create a WebGL renderer and append to the DOM
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-# Legs (Cylinders)
-bpy.ops.mesh.primitive_cylinder_add(radius=0.2, depth=1, location=(-0.2, 0, -0.5))
-left_leg = bpy.context.active_object
-left_leg.name = "Left Leg"
+        // Create a basic geometry (a cube as a placeholder for the girl model)
+        var geometry = new THREE.BoxGeometry(1, 2, 1); // A simple box as a placeholder
+        var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        var cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
 
-bpy.ops.mesh.primitive_cylinder_add(radius=0.2, depth=1, location=(0.2, 0, -0.5))
-right_leg = bpy.context.active_object
-right_leg.name = "Right Leg"
+        // Set the camera position
+        camera.position.z = 5;
 
-# Arms (Cylinders)
-bpy.ops.mesh.primitive_cylinder_add(radius=0.15, depth=1, location=(-0.6, 0, 1.0))
-left_arm = bpy.context.active_object
-left_arm.name = "Left Arm"
+        // Animation loop to render the scene
+        var animate = function () {
+            requestAnimationFrame(animate);
 
-bpy.ops.mesh.primitive_cylinder_add(radius=0.15, depth=1, location=(0.6, 0, 1.0))
-right_arm = bpy.context.active_object
-right_arm.name = "Right Arm"
+            // Rotate the cube for demonstration
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
 
-# Optional: Scale and adjust proportions
-body.scale = (0.5, 0.5, 1.5)
-head.scale = (0.6, 0.6, 0.6)
+            // Render the scene from the camera's point of view
+            renderer.render(scene, camera);
+        };
 
-# Set view to show the model
-bpy.ops.view3d.view_all(center=False)
+        animate();
+
+        // Resize the canvas if the window is resized
+        window.addEventListener('resize', function () {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+
+</body>
+</html>
