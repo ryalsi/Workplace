@@ -1,0 +1,119 @@
+/* General Reset: Remove default margin/padding from all elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f6;  /* Light background for the app */
+    color: #333;                /* Dark text for readability */
+    line-height: 1.6;           /* Improve text readability */
+    padding: 20px;
+}
+
+/* Header Styling */
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 2.5em;
+    color: #4CAF50;  /* Green color for the app title */
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.1em;
+    color: #777; /* Grey for subtitle */
+}
+
+/* Main Task Container */
+#task-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff; /* White background for content */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Task List */
+ul#task-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+ul#task-list li {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+ul#task-list li.completed {
+    background-color: #e0ffe0; /* Light green for completed tasks */
+    text-decoration: line-through;
+}
+
+/* Add Task Button */
+button {
+    background-color: #4CAF50; /* Green color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049; /* Darker green when hovered */
+}
+
+/* Reward Section */
+#reward-section {
+    text-align: center;
+    margin-top: 30px;
+}
+
+#rewardMessage {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f1f8e9; /* Light yellow background for reward */
+}
+
+#rewardMessage span {
+    color: #4CAF50; /* Green color for motivational messages */
+}
+
+/* Responsive Design: Adjusting for smaller screen sizes */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    header h1 {
+        font-size: 2em;
+    }
+
+    #task-container {
+        padding: 15px;
+    }
+
+    ul#task-list li {
+        font-size: 0.9em;
+    }
+}
