@@ -1,65 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Model Viewer</title>
-  <style>
-    body { margin: 0; }
-    canvas { display: block; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Completion with Rewards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .task {
+            background-color: #e3f2fd;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .task button:disabled {
+            background-color: #b0bec5;
+        }
+
+        .reward {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #4caf50;
+        }
+
+        .btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #e68900;
+        }
+
+    </style>
 </head>
 <body>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/loaders/FBXLoader.js"></script>
+    <div class="container">
+        <h1>Daily Task Tracker</h1>
 
-  <script>
-    // Set up scene, camera, and renderer
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+        <ul class="task-list" id="taskList">
+            <li class="task">
+                <span>Task 1: Complete Coding</span>
+                <button onclick="markTaskCompleted(0)">Mark as Completed</button>
+            </li>
+            <li class="task">
+                <span>Task 2: Review Notes</span>
+                <button onclick="markTaskCompleted(1)">Mark as Completed</button>
+            </li>
+            <li class="task">
+                <span>Task 3: Go for a Walk</span>
+                <button onclick="markTaskCompleted(2)">Mark as Completed</button>
+            </li>
+        </ul>
 
-    // Load the FBX model
-    const loader = new THREE.FBXLoader();
-    loader.load('Anime_character.fbx', (fbx) => {
-      const model = fbx;
-      console.log('Model loaded successfully');
-      
-      // Optionally, scale the model if necessary
-      model.scale.set(0.1, 0.1, 0.1); // Adjust as needed
-      scene.add(model);
+        <div class="reward" id="rewardMessage">Rewards: Complete all tasks for a reward!</div>
+        
+        <button class="btn" onclick="resetTasks()">Reset Tasks</button>
+    </div>
 
-      // Adjust camera position based on model size
-      const bbox = new THREE.Box3().setFromObject(model);
-      const center = bbox.getCenter(new THREE.Vector3());
-      const size = bbox.getSize(new THREE.Vector3());
-      camera.position.set(center.x, center.y, size.length() * 2); // Position the camera farther from the model
-      camera.lookAt(center);
+    <script>
+        // Array to track the status of tasks (completed or not)
+        let taskStatus = [false, false, false];
+        
+        // Function to mark a task as completed
+        function markTaskCompleted(taskIndex) {
+            if (!taskStatus[taskIndex]) {
+                taskStatus[taskIndex] = true;
+                document.querySelectorAll('.task button')[taskIndex].disabled = true; // Disable the button
+                document.querySelectorAll('.task span')[taskIndex].style.textDecoration = "line-through"; // Mark as done
+                checkCompletion();
+            }
+        }
 
-      // Start animation
-      animate();
-    }, undefined, (error) => {
-      console.error('Error loading FBX model:', error);
-    });
+        // Function to check if all tasks are completed
+        function checkCompletion() {
+            if (taskStatus.every(status => status === true)) {
+                document.getElementById('rewardMessage').textContent = "Congratulations! You've earned a reward!";
+            } else {
+                document.getElementById('rewardMessage').textContent = "Rewards: Complete all tasks for a reward!";
+            }
+        }
 
-    // Animation loop
-    function animate() {
-      requestAnimationFrame(animate);
-
-      // Optional: rotate the model
-      scene.children[0]?.rotation.y += 0.01;
-
-      renderer.render(scene, camera);
-    }
-
-    // Resize handler
-    window.addEventListener('resize', () => {
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-    });
-  </script>
+        // Function to reset tasks
+        function resetTasks() {
+            taskStatus = [false, false, false];
+            document.getElementById('rewardMessage').textContent = "Rewards: Complete all tasks for a reward!";
+            let taskButtons = document.querySelectorAll('.task button');
+            let taskSpans = document.querySelectorAll('.task span');
+            taskButtons.forEach((button, index) => {
+                button.disabled = false;
+                taskSpans[index].style.textDecoration = "none";
+            });
+        }
+    </script>
 </body>
 </html>
