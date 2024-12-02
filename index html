@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .appointment-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-size: 1rem;
+            color: #333;
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .note {
+            color: #888;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="appointment-form">
+            <h2>Schedule an Appointment</h2>
+
+            <form action="submit_appointment.php" method="POST">
+                <label for="appointment-title">Appointment Title</label>
+                <input type="text" id="appointment-title" name="appointment-title" required placeholder="Enter title of appointment">
+
+                <label for="appointment-date">Select Date</label>
+                <input type="date" id="appointment-date" name="appointment-date" required>
+
+                <label for="appointment-time">Select Time</label>
+                <input type="time" id="appointment-time" name="appointment-time" required>
+
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="4" placeholder="Add additional details about your appointment"></textarea>
+
+                <label for="reminder">Set Reminder</label>
+                <select id="reminder" name="reminder">
+                    <option value="none">None</option>
+                    <option value="15-minutes">15 minutes before</option>
+                    <option value="30-minutes">30 minutes before</option>
+                    <option value="1-hour">1 hour before</option>
+                </select>
+
+                <input type="submit" value="Book Appointment">
+            </form>
+
+            <p class="note">*Reminder notifications will be sent to your email if enabled.</p>
+        </div>
+    </div>
+
+</body>
+</html>
