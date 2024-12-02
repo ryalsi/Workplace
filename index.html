@@ -11,7 +11,7 @@
 </head>
 <body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/loaders/GLTFLoader.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/loaders/FBXLoader.js"></script>
 
   <script>
     // Set up scene, camera, and renderer
@@ -29,10 +29,10 @@
     directionalLight.position.set(5, 5, 5); // Position the light
     scene.add(directionalLight);
 
-    // Load the GLTF model
-    const loader = new THREE.GLTFLoader();
+    // Load the FBX model
+    const loader = new THREE.FBXLoader();
     loader.load('Anime_character.fbx', (fbx) => {
-      const model = fbx.scene;
+      const model = fbx;
       console.log('Model loaded successfully');
       
       // Optionally, scale the model if necessary
@@ -49,7 +49,7 @@
       // Start animation
       animate();
     }, undefined, (error) => {
-      console.error('Error loading GLTF model:', error);
+      console.error('Error loading FBX model:', error);
     });
 
     // Animation loop
